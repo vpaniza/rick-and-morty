@@ -1,0 +1,52 @@
+.character-page{
+  width: 100%;
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 48px 0;
+}
+h1{
+  width: 100%;
+  text-align: center;
+}
+.content{
+  width: 80%;
+  margin: 24px auto;
+  padding-top: 36px;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  > img {
+    width: 40%;
+    max-width: 340px;
+    height: auto;
+  }
+
+  .description{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    .item{
+      margin: 12px 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      > p{
+        font-size: 20px;
+      }
+    }
+    .favorite{
+      margin-top: 20px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: fit-content;
+      > svg{
+        cursor: pointer;
+      }
+    }
+  }
+}

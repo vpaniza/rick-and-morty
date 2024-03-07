@@ -1,0 +1,53 @@
+.form{
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  .auth-form{
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+
+    > input {
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    > button{
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background-color: rgba(19, 227, 16, 1);
+      cursor: pointer;
+      color: #FFFFFF;
+      font-weight: 700;
+      &:hover{
+        background-color: rgb(15, 163, 12);
+      }
+      &:disabled{
+        background-color: rgba(19, 227, 16, 0.4);
+        cursor:not-allowed;
+      }
+    }
+  }
+
+  .switch-form {
+    display: flex;
+    align-items: center;
+    > button{
+      background-color: transparent;
+      font-weight: 700;
+      text-decoration: underline;
+      color: #FFFFFF;
+      border: none;
+      display: inline;
+      cursor: pointer;
+    } 
+  }
+}
