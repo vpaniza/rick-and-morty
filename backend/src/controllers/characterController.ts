@@ -27,8 +27,9 @@ export const getAllCharacters = async (req: Request, res: Response) => {
     }else{
       throw new Error("Unexpected response status: " + response.status);
     }  
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+  } catch (error: any) {
+    console.error(error)
+    res.status(error.response.status).json({ message: error.response.data.error });
   }
 }
 
@@ -50,8 +51,8 @@ export const getCharacterByID = async (req: Request, res: Response) => {
     }else{
       throw new Error("Unexpected response status: " + response.status);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching character id ${req.params.id}`, error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(error.response.status).json({ message: error.response.data.error })
   }
 }
