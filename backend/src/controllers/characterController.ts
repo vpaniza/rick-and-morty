@@ -8,8 +8,10 @@ const BASE_URL=process.env.RICKANDMORTY_API_BASE_URL || "";
 // GET all characters
 export const getAllCharacters = async (req: Request, res: Response) => {
   try {
-    const response = await axios.get(BASE_URL+"/character");
+    const page = req.query.pageNum ?? 1;
+    const response = await axios.get(BASE_URL+`/character/?page=${page}`);
     if(response.status === 200){
+      const info = response.data.info;
       const characters = response.data.results.map((ch: any) => {
         return(
           {
@@ -23,7 +25,7 @@ export const getAllCharacters = async (req: Request, res: Response) => {
           }
         )
       })
-      res.json(characters);
+      res.json({info: info, characters: characters});
     }else{
       throw new Error("Unexpected response status: " + response.status);
     }  
