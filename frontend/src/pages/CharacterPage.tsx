@@ -34,10 +34,10 @@ export const CharacterPage = () => {
             <p>Gender: </p>
             <p>{data.gender}</p>
           </div>
-          {data.origin.name !== "unknown" &&
+          {data && data.origin?.name !== "unknown" &&
             <div className="item">
               <p>Origin: </p>
-              <p>{data.origin.name}</p>
+              <p>{data.origin?.name}</p>
             </div>
           }
           <button className="favorite" onClick={(e) => handleUpdateFav(e, data.id)}>

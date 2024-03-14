@@ -1,39 +1,44 @@
 import { useNavigate } from "react-router-dom";
-import { useCharactersQuery } from "../../hooks/useCharacter"
-import { CharacterCard, CharacterCardProps } from "../characterCard/CharacterCard";
+import { useCharactersMutation, useCharactersQuery } from "../../hooks/useCharacter"
+import { CharacterCard } from "../characterCard/CharacterCard";
+import ReactPaginate from 'react-paginate';
 import "./CardsWrapper.css";
 import { Spinner } from "../spinner/Spinner";
 import { useEffect, useState } from "react";
+import { Character } from "../../models/character";
 
 type SortBy =  "name-asc" | "name-desc" | "species";
 
 export const CardsWrapper = () => {
-  const { data: characters, isLoading, isFetching } = useCharactersQuery();
+  const { data, isLoading, isFetching } = useCharactersQuery();
+  const { mutate } = useCharactersMutation();
   const navigate = useNavigate();
-  const [ sortedCharacters, setSortedCharacters ] = useState(characters);
+  const [ sortedCharacters, setSortedCharacters ] = useState(data?.characters ?? []);
   const [ sortBy, setSortBy ] = useState<SortBy>();
 
   useEffect(() => {
-    setSortedCharacters(characters);
-  }, [characters]);
+    if(data) setSortedCharacters(data.characters);
+  }, [data]);
 
   const handleSortBy = (sortKey: string) => {
-    let sortedChars = characters;
-    setSortBy(sortKey as SortBy)
-    switch (sortKey) {
-      case "name-asc":
-        sortedChars.sort((a: any, b: any) => a.name.localeCompare(b.name));
-        break;
-      case "name-desc":
-        sortedChars.sort((a: any, b:any) => b.name.localeCompare(a.name));
-        break;
-      case "species":
-        sortedChars.sort((a:any, b:any) => a.species.localeCompare(b.species));
-        break;
-      default:
-        break;
-      };
-      setSortedCharacters(sortedChars);
+    if(data){
+      let sortedChars = data.characters;
+      setSortBy(sortKey as SortBy)
+      switch (sortKey) {
+        case "name-asc":
+          sortedChars.sort((a: any, b: any) => a.name.localeCompare(b.name));
+          break;
+        case "name-desc":
+          sortedChars.sort((a: any, b:any) => b.name.localeCompare(a.name));
+          break;
+        case "species":
+          sortedChars.sort((a:any, b:any) => a.species.localeCompare(b.species));
+          break;
+        default:
+          break;
+        };
+        setSortedCharacters(sortedChars);
+    }
   };
 
   return(
@@ -59,7 +64,7 @@ export const CardsWrapper = () => {
             </select>
           </div>
           <div className="cards">
-            {sortedCharacters?.map((ch: CharacterCardProps) => {
+            {sortedCharacters?.map((ch: Character) => {
               return (
                 <div key={`${ch.id}+${ch.name}`} onClick={() => navigate(`/character/${ch.id}`)} className="character-card">
                   <CharacterCard data={ch} />
@@ -67,6 +72,18 @@ export const CardsWrapper = () => {
               )
             })}
           </div>
+          {data && data.info &&
+            <ReactPaginate
+              breakLabel="..."
+              onPageChange={(event) => mutate(event.selected + 1)}
+              pageRangeDisplayed={1}
+              pageCount={data.info.pages}
+              nextLabel={data.info.next === null ? null : "Next >"}
+              previousLabel={data.info.prev === null ? null : "< Previous"}
+              renderOnZeroPageCount={null}
+              className="pagination"
+            />
+          }
         </>
       }
       </div>

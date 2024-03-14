@@ -3,22 +3,9 @@ import "./CharacterCard.css";
 import '@fortawesome/fontawesome-free/css/all.css';
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useUserFavoritesMutation, useUserFavoritesQuery } from "../../hooks/useUser";
+import { Character } from "../../models/character";
 
-
-export interface CharacterCardProps {
-  id: string,
-  name: string,
-  status: string,
-  species: string, 
-  gender: string,
-  origin: {
-    name: string,
-    url: string
-  }, 
-  image: string
-}
-
-export const CharacterCard = ({data}: {data: CharacterCardProps}) => {
+export const CharacterCard = ({data}: {data: Character}) => {
   const { favoritesMutation } = useUserFavoritesMutation();
   const { data: favorites } = useUserFavoritesQuery();
 

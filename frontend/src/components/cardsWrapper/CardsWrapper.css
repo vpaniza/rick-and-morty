@@ -53,3 +53,21 @@
     background-color: rgba(227, 227, 227, 0.9);
   }
 }
+
+.cards-section > ul {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  > li{
+    cursor: pointer;
+    padding: 6px;
+  }
+  > .selected {
+    background-color: white;
+    color: #000000;
+    padding: 6px;
+    border-radius: 50%;
+  }
+}
