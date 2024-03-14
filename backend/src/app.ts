@@ -1,6 +1,4 @@
-import express from 'express';
 import dotenv from 'dotenv';
-import createError from 'http-errors';
 import { notFoundMiddleware, errorHandlerMiddleware } from './middlewares/helpers';
 import { createConnection, initializeConnection } from './utils/connection';
 import { createServer } from './utils/server';

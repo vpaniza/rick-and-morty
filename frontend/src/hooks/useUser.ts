@@ -81,28 +81,33 @@ export const useSignUp = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate: signupMutation, isError } = useMutation<User, unknown, { username: string, password: string }, unknown>(
-    async ({username, password}) => {
-      try{
-        const response = await signup(username, password);
-        if(response.result){
-          const userData = await login(username, password);
-          queryClient.setQueryData(userQueryKey, userData);
-          navigate('/character');
-          return userData;
-        }
-      }catch(err: any){
-        if (err.response && err.response.status === 403) {
-          console.error('Username must contain at least 8 characters');
+  const signupMutation = useMutation(
+    async ({ username, password }: { username: string; password: string }) => {
+      const signupResponse = await signup(username, password);
+      if (signupResponse.result) {
+        const userData = await login(username, password);
+        return userData; // This userData will be passed to onSuccess
+      } else {
+        throw new Error('Signup failed. Please try again.');
+      }
+    },
+    {
+      onSuccess: (userData) => {
+        // On successful signup and login, set the user data in the query cache
+        queryClient.setQueryData(userQueryKey, userData);
+        navigate('/character');
+      },
+      onError: (error: any) => {
+        if (error.response && error.response.status === 403) {
+          console.error('Signup error: Username must contain at least 8 characters');
         } else {
-          console.error(err);
+          console.error('Signup error:', error.message);
         }
-        throw err;
       }
     }
   );
 
-  return { signupMutation, isError};
+  return { signupMutation: signupMutation.mutateAsync, isError: signupMutation.isError };
 };
 
 export const useUserFavoritesMutation = () => {

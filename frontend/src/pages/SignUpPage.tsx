@@ -1,52 +1,62 @@
 import { useState } from "react";
-import { useLogin } from "../../hooks/useUser";
-import "./Form.css";
 import { useNavigate } from "react-router-dom";
+import { useSignUp } from "../hooks/useUser";
+import "./Form.css";
 
 interface UserIn {
   username: string;
   password: string;
 }
 
-export const LoginForm = () => {
+export const SignUpPage = () => {
   const navigate = useNavigate();
-  const { loginMutation, isError } = useLogin();
+  const { signupMutation } = useSignUp();
   const [userDetails, setUserDetails] = useState<UserIn>({username: "", password: "" });
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const response =  loginMutation(userDetails);
-    return response;
-  }
+    if (userDetails.username.length < 8) {
+      setError("Username must contain at least 8 characters");
+      return;
+    };
+    try {
+      await signupMutation(userDetails);
+      setUserDetails({username: "", password: ""})
+      setError(null);
+    } catch (err) {
+      setError("An error occurred while signing up");
+    };
+  };
 
   return(
     <div className="form">
-      <h2>Login</h2>
+      <h2>Sign up</h2>
 
       <form className="auth-form">
         <input 
           type="text" 
-          placeholder="Enter your username" 
+          placeholder="Enter a username" 
           value={userDetails?.username} 
           onChange={(e) => setUserDetails({...userDetails, username: e.target.value})}
         />
         <input type="password" 
-          placeholder="Password" 
+          placeholder="Create a password" 
           value={userDetails?.password} 
           onChange={(e) => setUserDetails({...userDetails, password: e.target.value})}
         />
-        {isError && <p>Invalid credentials</p>}
+        {error && <p>Error: {error}</p>}
         <button 
           disabled={!userDetails.username.length || !userDetails.password.length}
           onClick={(e) => handleSubmit(e)}
         >
-          Login
+          Sign up
         </button>
       </form>
 
       <div className="switch-form">
-        <p>Don't have an account?</p>
-        <button onClick={()=> navigate("/signup")}>Sign up</button>
+        <p>Already have an account?</p>
+        <button onClick={()=> navigate("/login")}>Login</button>
       </div>
     </div>
   )

@@ -1,63 +1,52 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSignUp } from "../../hooks/useUser";
+import { useLogin } from "../hooks/useUser";
 import "./Form.css";
+import { useNavigate } from "react-router-dom";
 
 interface UserIn {
   username: string;
   password: string;
 }
 
-export const SignUpForm = () => {
+export const LoginPage = () => {
   const navigate = useNavigate();
-  const { signupMutation } = useSignUp();
+  const { loginMutation, isError } = useLogin();
   const [userDetails, setUserDetails] = useState<UserIn>({username: "", password: "" });
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    if (userDetails.username.length < 8) {
-      setError("Username must contain at least 8 characters");
-      return;
-    };
-    try {
-      const response = signupMutation(userDetails);
-      setError(null);
-      return response
-    } catch (err) {
-      console.error(err);
-      setError("An error occurred while signing up");
-    };
-  };
+    const response =  loginMutation(userDetails);
+    return response;
+  }
 
   return(
     <div className="form">
-      <h2>Sign up</h2>
+      <h2>Login</h2>
 
       <form className="auth-form">
         <input 
           type="text" 
-          placeholder="Enter a username" 
+          placeholder="Enter your username" 
           value={userDetails?.username} 
           onChange={(e) => setUserDetails({...userDetails, username: e.target.value})}
         />
         <input type="password" 
-          placeholder="Create a password" 
+          placeholder="Password" 
           value={userDetails?.password} 
           onChange={(e) => setUserDetails({...userDetails, password: e.target.value})}
         />
-        {error && <p>Error: {error}</p>}
+        {isError && <p>Invalid credentials</p>}
         <button 
           disabled={!userDetails.username.length || !userDetails.password.length}
           onClick={(e) => handleSubmit(e)}
         >
-          Sign up
+          Login
         </button>
       </form>
 
       <div className="switch-form">
-        <p>Already have an account?</p>
-        <button onClick={()=> navigate("/login")}>Login</button>
+        <p>Don't have an account?</p>
+        <button onClick={()=> navigate("/signup")}>Sign up</button>
       </div>
     </div>
   )
